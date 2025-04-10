@@ -1,7 +1,8 @@
 "use client";
 
 import Footer from "@/features/editor/components/Footer";
-import Navbar from "@/features/editor/components/navbar";
+
+import { Navbar } from "@/features/editor/components/navbar";
 import Sidebar from "@/features/editor/components/sidebar";
 import Toolbar from "@/features/editor/components/toolbar";
 import { useEditor } from "@/features/editor/hooks/use-editor";
