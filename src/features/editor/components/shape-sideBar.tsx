@@ -46,6 +46,7 @@ export const ShapeSidebar = ({
             onClick={() => editor?.addRectangle()}
             icon={FaSquareFull}
           />
+
           <ShapeTool onClick={() => editor?.addTriangle()} icon={IoTriangle} />
           <ShapeTool
             onClick={() => editor?.addInverseTriangle()}
