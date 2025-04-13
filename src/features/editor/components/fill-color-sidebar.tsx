@@ -17,6 +17,7 @@ export const FillColorSidebar = ({
   onChangeActiveTool,
 }: FillColorSidebarProps) => {
   const value = editor?.getActiveFillColor() || FILL_COLOR;
+
   const onClose = () => {
     onChangeActiveTool("select");
   };
