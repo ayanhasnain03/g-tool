@@ -3,14 +3,15 @@
 import { Footer } from "@/features/editor/components/Footer";
 import { Navbar } from "@/features/editor/components/navbar";
 
+import { FillColorSidebar } from "@/features/editor/components/fill-color-sidebar";
 import { ShapeSidebar } from "@/features/editor/components/shape-sideBar";
 import { Sidebar } from "@/features/editor/components/sidebar";
+import { StrokeColorSidebar } from "@/features/editor/components/stroke-color-sidebar";
 import { Toolbar } from "@/features/editor/components/toolbar";
 import { useEditor } from "@/features/editor/hooks/use-editor";
 import { ActiveTool, selectionDependentTools } from "@/features/editor/types";
 import { fabric } from "fabric";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FillColorSidebar } from "./fill-color-sidebar";
 
 export const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -75,6 +76,11 @@ export const Editor = () => {
           onChangeActiveTool={onChangeActiveTool}
         />
         <FillColorSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={setActiveTool}
+        />
+        <StrokeColorSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={setActiveTool}
