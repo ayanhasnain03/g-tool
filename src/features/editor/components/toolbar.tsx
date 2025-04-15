@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
+import { isTextType } from "../utils";
+
 interface ToolbarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
@@ -18,6 +20,9 @@ export const Toolbar = ({
 }: ToolbarProps) => {
   const fillColor = editor?.getActiveFillColor();
   const strokeColor = editor?.getActiveStrokeColor();
+
+  const selectedObjectType = editor?.selectedObjects[0]?.type;
+  const isText = isTextType(selectedObjectType);
 
   if (editor?.selectedObjects.length === 0) {
     return (
@@ -42,35 +47,40 @@ export const Toolbar = ({
           </Button>
         </Hint>
       </div>
+      {!isText && (
+        <>
+          <div className="flex items-center h-full justify-center">
+            <Hint label="Stroke Color" side="bottom" sideOffset={5}>
+              <Button
+                onClick={() => onChangeActiveTool("stroke-color")}
+                size="icon"
+                variant="ghost"
+                className={cn(activeTool === "stroke-color" && "bg-gray-100")}
+              >
+                <div
+                  className="rounded-sm size-4 border-2 bg-white"
+                  style={{ borderColor: strokeColor }}
+                />
+              </Button>
+            </Hint>
+          </div>
+          <div className="flex items-center h-full justify-center">
+            <Hint label="Stroke Width" side="bottom" sideOffset={5}>
+              <Button
+                onClick={() => onChangeActiveTool("stroke-width")}
+                size="icon"
+                variant="ghost"
+                className={cn(activeTool === "stroke-width" && "bg-gray-100")}
+              >
+                <BsBorderWidth className="size-4 " />
+              </Button>
+            </Hint>
+          </div>
+        </>
+      )}
+
       <div className="flex items-center h-full justify-center">
-        <Hint label="Stroke Color" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => onChangeActiveTool("stroke-color")}
-            size="icon"
-            variant="ghost"
-            className={cn(activeTool === "stroke-color" && "bg-gray-100")}
-          >
-            <div
-              className="rounded-sm size-4 border-2 bg-white"
-              style={{ borderColor: strokeColor }}
-            />
-          </Button>
-        </Hint>
-      </div>
-      <div className="flex items-center h-full justify-center">
-        <Hint label="Stroke Width" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => onChangeActiveTool("stroke-width")}
-            size="icon"
-            variant="ghost"
-            className={cn(activeTool === "stroke-width" && "bg-gray-100")}
-          >
-            <BsBorderWidth className="size-4 " />
-          </Button>
-        </Hint>
-      </div>
-      <div className="flex items-center h-full justify-center">
-        <Hint label="Bring forward" side="bottom" sideOffset={5}>
+        <Hint label="Bring Forward" side="bottom" sideOffset={5}>
           <Button
             onClick={() => editor?.bringForward()}
             size="icon"
@@ -81,7 +91,7 @@ export const Toolbar = ({
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Send backward" side="bottom" sideOffset={5}>
+        <Hint label="Send Backwards" side="bottom" sideOffset={5}>
           <Button
             onClick={() => editor?.sendBackwards()}
             size="icon"

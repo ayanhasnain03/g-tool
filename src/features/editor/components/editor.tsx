@@ -14,6 +14,7 @@ import { fabric } from "fabric";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OpacitySidebar } from "./opacity-sidebar";
 import { StrokeWidthSidebar } from "./stroke-width-sidebar";
+import { TextSidebar } from "./text-sidebar";
 
 export const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -93,6 +94,11 @@ export const Editor = () => {
           onChangeActiveTool={setActiveTool}
         />
         <OpacitySidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={setActiveTool}
+        />
+        <TextSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={setActiveTool}
