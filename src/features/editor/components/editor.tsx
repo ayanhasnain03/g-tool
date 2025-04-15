@@ -12,6 +12,7 @@ import { useEditor } from "@/features/editor/hooks/use-editor";
 import { ActiveTool, selectionDependentTools } from "@/features/editor/types";
 import { fabric } from "fabric";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { OpacitySidebar } from "./opacity-sidebar";
 import { StrokeWidthSidebar } from "./stroke-width-sidebar";
 
 export const Editor = () => {
@@ -87,6 +88,11 @@ export const Editor = () => {
           onChangeActiveTool={setActiveTool}
         />
         <StrokeWidthSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={setActiveTool}
+        />
+        <OpacitySidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={setActiveTool}
