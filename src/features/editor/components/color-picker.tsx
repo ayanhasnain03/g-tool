@@ -1,3 +1,4 @@
+"use client";
 import { colors } from "@/features/editor/types";
 import { rgbaObjectToString } from "@/features/editor/utils";
 import { ChromePicker, CirclePicker } from "react-color";
