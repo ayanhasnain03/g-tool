@@ -8,6 +8,7 @@ import {
   Editor,
   EditorHookProps,
   FILL_COLOR,
+  FONT_FAMILY,
   RECTANGLE_OPTIONS,
   STROKE_COLOR,
   STROKE_DASH_ARRAY,
@@ -30,6 +31,8 @@ const buildEditor = ({
   selectedObjects,
   strokeDashArray,
   setStrokeDashArray,
+  fontFamily,
+  setFontFamily,
 }: BuildEditorProps): Editor => {
   const getWorkspace = () => {
     return canvas.getObjects().find((object) => object.name === "clip");
@@ -87,6 +90,16 @@ const buildEditor = ({
 
       const workspace = getWorkspace();
       workspace?.sendToBack();
+    },
+    changeFontFamily: (value: string) => {
+      setFontFamily(value);
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-expect-error asdad
+          object.set({ fontFamily: value });
+        }
+      });
+      canvas.renderAll();
     },
     changeFillColor: (value: string) => {
       setFillColor(value);
@@ -203,6 +216,19 @@ const buildEditor = ({
       addToCanvas(object);
     },
     canvas,
+    getActiveFontFamily: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) {
+        return fontFamily;
+      }
+
+      // @ts-expect-error ignore
+      const value = selectedObject.get("fontFamily") || fontFamily;
+
+      // Currently, gradients & patterns are not supported
+      return value;
+    },
     getActiveFillColor: () => {
       const selectedObject = selectedObjects[0];
       if (!selectedObject) return fillColor;
@@ -253,11 +279,9 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [container, setConatiner] = useState<HTMLDivElement | null>(null);
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
-
+  const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
   const [fillColor, setFillColor] = useState(FILL_COLOR);
-
   const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
-
   const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
   const [strokeDashArray, setStrokeDashArray] =
     useState<number[]>(STROKE_DASH_ARRAY);
@@ -286,6 +310,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
         setStrokeWidth,
         strokeDashArray,
         selectedObjects,
+        fontFamily,
+        setFontFamily,
       });
     }
     return undefined;
@@ -296,6 +322,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     strokeColor,
     selectedObjects,
     strokeDashArray,
+    fontFamily,
   ]);
 
   const init = useCallback(
