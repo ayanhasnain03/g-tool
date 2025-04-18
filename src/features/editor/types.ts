@@ -145,6 +145,8 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  changeFontStyle: (value: string) => void;
+  getActiveFontStyle: () => string;
   changeFontWeight: (value: number) => void;
   getActiveFontWeight: () => number;
   changeFontFamily: (value: string) => void;
