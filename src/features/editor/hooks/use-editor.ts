@@ -151,7 +151,29 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
+    changeTextAlign: (value: string) => {
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-expect-error error
+          object.set({ textAlign: value });
+        }
+      });
+      canvas.renderAll();
+    },
+    getActiveTextAlign: () => {
+      const selectedObject = selectedObjects[0];
 
+      if (!selectedObject) {
+        return "left";
+      }
+
+      // @ts-expect-error err
+
+      const value = selectedObject.get("textAlign") || "left";
+
+      // Currently, gradients & patterns are not supported
+      return value;
+    },
     bringForward: () => {
       canvas.getActiveObjects().forEach((object) => {
         canvas.bringForward(object);

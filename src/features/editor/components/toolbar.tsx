@@ -1,11 +1,24 @@
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
-import { ActiveTool, Editor, FONT_WEIGHT } from "@/features/editor/types";
+import {
+  ActiveTool,
+  Editor,
+  FONT_STYLE,
+  FONT_WEIGHT,
+} from "@/features/editor/types";
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
+import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  ArrowDown,
+  ArrowUp,
+  ChevronDown,
+} from "lucide-react";
 import { useState } from "react";
 import { BsBorderWidth } from "react-icons/bs";
 import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
+import { RxTransparencyGrid } from "react-icons/rx";
 import { isTextType } from "../utils";
 
 interface ToolbarProps {
@@ -19,30 +32,40 @@ export const Toolbar = ({
   activeTool,
   onChangeActiveTool,
 }: ToolbarProps) => {
-  const initialFillColor = editor?.getActiveFillColor();
-  const initialStrokeColor = editor?.getActiveStrokeColor();
-  const initialFontFamily = editor?.getActiveFontFamily();
-  const initialFontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
-  const initialFontStyle = editor?.getActiveFontStyle();
-  const initialFontLinethrough = editor?.getActiveFontLinethrough();
-  const initialFontUnderline = editor?.getActiveFontUnderline();
-
   const [properties, setProperties] = useState({
-    fillColor: initialFillColor,
-    strokeColor: initialStrokeColor,
-    fontFamily: initialFontFamily,
-    fontWeight: initialFontWeight,
-    fontStyle: initialFontStyle,
-    linethrough: initialFontLinethrough,
-    underline: initialFontUnderline,
+    fillColor: editor?.getActiveFillColor(),
+    strokeColor: editor?.getActiveStrokeColor(),
+    fontFamily: editor?.getActiveFontFamily(),
+    fontWeight: editor?.getActiveFontWeight() || FONT_WEIGHT,
+    fontStyle: editor?.getActiveFontStyle() || FONT_STYLE,
+    linethrough: editor?.getActiveFontLinethrough(),
+    underline: editor?.getActiveFontUnderline(),
+    textAlign: editor?.getActiveTextAlign(),
   });
 
   const selectedObject = editor?.selectedObjects[0];
-  const selectedObjectType = selectedObject?.type;
+  const selectedObjectType = editor?.selectedObjects[0]?.type;
   const isText = isTextType(selectedObjectType);
 
+  const onChangeTextAlign = (value: string) => {
+    if (!selectedObject) {
+      return;
+    }
+
+    editor?.changeTextAlign(value);
+    setProperties((current) => ({
+      ...current,
+      textAlign: value,
+    }));
+  };
+
   const toggleBold = () => {
-    if (!selectedObject) return;
+    const selectedObject = editor?.selectedObjects[0];
+
+    if (!selectedObject) {
+      return;
+    }
+
     const newValue = properties.fontWeight > 500 ? 500 : 700;
     editor?.changeFontWeight(newValue);
     setProperties((current) => ({
@@ -52,7 +75,12 @@ export const Toolbar = ({
   };
 
   const toggleItalic = () => {
-    if (!selectedObject) return;
+    const selectedObject = editor?.selectedObjects[0];
+
+    if (!selectedObject) {
+      return;
+    }
+
     const isItalic = properties.fontStyle === "italic";
     const newValue = isItalic ? "normal" : "italic";
     editor?.changeFontStyle(newValue);
@@ -76,6 +104,7 @@ export const Toolbar = ({
       linethrough: newValue,
     }));
   };
+
   const toggleUnderline = () => {
     const selectedObject = editor?.selectedObjects[0];
 
@@ -91,15 +120,14 @@ export const Toolbar = ({
     }));
   };
 
-  if (!editor?.selectedObjects.length) {
+  if (editor?.selectedObjects.length === 0) {
     return (
-      <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2 font-normal"></div>
+      <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2"></div>
     );
   }
 
   return (
     <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2">
-      {/* Fill Color */}
       <div className="flex items-center h-full justify-center">
         <Hint label="Color" side="bottom" sideOffset={5}>
           <Button
@@ -110,13 +138,11 @@ export const Toolbar = ({
           >
             <div
               className="rounded-sm size-4 border"
-              style={{ backgroundColor: properties?.fillColor }}
+              style={{ backgroundColor: properties.fillColor }}
             />
           </Button>
         </Hint>
       </div>
-
-      {/* Stroke Properties (only if not text) */}
       {!isText && (
         <>
           <div className="flex items-center h-full justify-center">
@@ -129,7 +155,7 @@ export const Toolbar = ({
               >
                 <div
                   className="rounded-sm size-4 border-2 bg-white"
-                  style={{ borderColor: properties?.strokeColor }}
+                  style={{ borderColor: properties.strokeColor }}
                 />
               </Button>
             </Hint>
@@ -142,14 +168,13 @@ export const Toolbar = ({
                 variant="ghost"
                 className={cn(activeTool === "stroke-width" && "bg-gray-100")}
               >
-                <BsBorderWidth className="size-4" />
+                <BsBorderWidth className="size-4 " />
               </Button>
             </Hint>
           </div>
         </>
       )}
 
-      {/* Font Properties (only if text) */}
       {isText && (
         <>
           <div className="flex items-center h-full justify-center">
@@ -164,7 +189,7 @@ export const Toolbar = ({
                 )}
               >
                 <div className="max-w-[100px] truncate">
-                  {properties?.fontFamily}
+                  {properties.fontFamily}
                 </div>
                 <ChevronDown className="size-4 ml-2 shrink-0" />
               </Button>
@@ -176,12 +201,9 @@ export const Toolbar = ({
                 onClick={toggleBold}
                 size="icon"
                 variant="ghost"
-                className={cn(
-                  "w-auto px-2 text-sm",
-                  properties?.fontWeight > 500 && "bg-gray-100"
-                )}
+                className={cn(properties.fontWeight > 500 && "bg-gray-100")}
               >
-                <FaBold className="size-4" />
+                <FaBold className="size-4 " />
               </Button>
             </Hint>
           </div>
@@ -192,11 +214,10 @@ export const Toolbar = ({
                 size="icon"
                 variant="ghost"
                 className={cn(
-                  "w-auto px-2 text-sm",
-                  properties?.fontStyle === "italic" && "bg-gray-100"
+                  properties.fontStyle === "italic" && "bg-gray-100"
                 )}
               >
-                <FaItalic className="size-4" />
+                <FaItalic className="size-4 " />
               </Button>
             </Hint>
           </div>
@@ -206,12 +227,9 @@ export const Toolbar = ({
                 onClick={toggleUnderline}
                 size="icon"
                 variant="ghost"
-                className={cn(
-                  "w-auto px-2 text-sm",
-                  properties?.underline && "bg-gray-100"
-                )}
+                className={cn(properties.underline && "bg-gray-100")}
               >
-                <FaUnderline className="size-4" />
+                <FaUnderline className="size-4 " />
               </Button>
             </Hint>
           </div>
@@ -221,17 +239,89 @@ export const Toolbar = ({
                 onClick={toggleLinethrough}
                 size="icon"
                 variant="ghost"
+                className={cn(properties.linethrough && "bg-gray-100")}
+              >
+                <FaStrikethrough className="size-4 " />
+              </Button>
+            </Hint>
+          </div>
+          <div className="flex items-center h-full justify-center">
+            <Hint label="Text Align Left" side="bottom" sideOffset={5}>
+              <Button
+                onClick={() => onChangeTextAlign("left")}
+                size="icon"
+                variant="ghost"
+                className={cn(properties.textAlign === "left" && "bg-gray-100")}
+              >
+                <AlignLeft className="size-4 " />
+              </Button>
+            </Hint>
+          </div>
+          <div className="flex items-center h-full justify-center">
+            <Hint label="Text Align Center" side="bottom" sideOffset={5}>
+              <Button
+                onClick={() => onChangeTextAlign("center")}
+                size="icon"
+                variant="ghost"
                 className={cn(
-                  "w-auto px-2 text-sm",
-                  properties?.linethrough && "bg-gray-100"
+                  properties.textAlign === "center" && "bg-gray-100"
                 )}
               >
-                <FaStrikethrough className="size-4" />
+                <AlignCenter className="size-4 " />
+              </Button>
+            </Hint>
+          </div>
+          <div className="flex items-center h-full justify-center">
+            <Hint label="Text Align Right" side="bottom" sideOffset={5}>
+              <Button
+                onClick={() => onChangeTextAlign("right")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.textAlign === "right" && "bg-gray-100"
+                )}
+              >
+                <AlignRight className="size-4 " />
               </Button>
             </Hint>
           </div>
         </>
       )}
+
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Bring Forward" side="bottom" sideOffset={5}>
+          <Button
+            onClick={() => editor?.bringForward()}
+            size="icon"
+            variant="ghost"
+          >
+            <ArrowUp className="size-4 " />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Send Backwards" side="bottom" sideOffset={5}>
+          <Button
+            onClick={() => editor?.sendBackwards()}
+            size="icon"
+            variant="ghost"
+          >
+            <ArrowDown className="size-4 " />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Opacity" side="bottom" sideOffset={5}>
+          <Button
+            onClick={() => onChangeActiveTool("opacity")}
+            size="icon"
+            variant="ghost"
+            className={cn(activeTool === "opacity" && "bg-gray-100")}
+          >
+            <RxTransparencyGrid className="size-4 " />
+          </Button>
+        </Hint>
+      </div>
     </div>
   );
 };
