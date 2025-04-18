@@ -80,14 +80,14 @@ export const FontSizeInput: React.FC<FontSizeInputProps> = ({
         min={min}
         max={max === Number.POSITIVE_INFINITY ? undefined : max}
         step={step}
-        className="w-16 h-8 text-center focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
+        className="w-[50px] h-8 focus-visible:ring-offset-0 focus-visible:ring-0 rounded-none"
         aria-label="Font size"
       />
       <Button
         onClick={increment}
         variant="outline"
         size="icon"
-        className="p-2 rounded-l-none border-l-0"
+        className="p-2 rounded-r-none border-r-0"
         aria-label="Increase font size"
       >
         <Plus size={16} />
