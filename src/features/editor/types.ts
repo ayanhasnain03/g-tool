@@ -145,6 +145,11 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  changeFontUnderline: (value: boolean) => void;
+  getActiveFontUnderline: () => boolean;
+  changeFontLinethrough: (value: boolean) => void;
+  getActiveFontLinethrough: () => boolean;
+
   changeFontStyle: (value: string) => void;
   getActiveFontStyle: () => string;
   changeFontWeight: (value: number) => void;

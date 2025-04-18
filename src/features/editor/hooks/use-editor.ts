@@ -68,6 +68,28 @@ const buildEditor = ({
       const value = selectedObject.get("opacity") || 1;
       return value;
     },
+    changeFontUnderline: (value: boolean) => {
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-expect-error error
+          object.set({ underline: value });
+        }
+      });
+      canvas.renderAll();
+    },
+    getActiveFontUnderline: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) {
+        return false;
+      }
+
+      // @ts-expect-error  error
+      const value = selectedObject.get("underline") || false;
+
+      // Currently, gradients & patterns are not supported
+      return value;
+    },
     changeFontStyle: (value: string) => {
       canvas.getActiveObjects().forEach((object) => {
         if (isTextType(object.type)) {
@@ -77,6 +99,30 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
+
+    changeFontLinethrough: (value: boolean) => {
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-expect-error ignore
+          object.set({ linethrough: value });
+        }
+      });
+      canvas.renderAll();
+    },
+    getActiveFontLinethrough: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) {
+        return false;
+      }
+
+      // @ts-expect-error error
+      const value = selectedObject.get("linethrough") || false;
+
+      // Currently, gradients & patterns are not supported
+      return value;
+    },
+
     getActiveFontStyle: () => {
       const selectedObject = selectedObjects[0];
 
