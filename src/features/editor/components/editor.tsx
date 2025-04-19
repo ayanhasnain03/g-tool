@@ -13,6 +13,8 @@ import { ActiveTool, selectionDependentTools } from "@/features/editor/types";
 import { fabric } from "fabric";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FontSidebar } from "./font-sidebar";
+
+import { ImageSidebar } from "./image-sidebar";
 import { OpacitySidebar } from "./opacity-sidebar";
 import { StrokeWidthSidebar } from "./stroke-width-sidebar";
 import { TextSidebar } from "./text-sidebar";
@@ -105,6 +107,11 @@ export const Editor = () => {
           onChangeActiveTool={setActiveTool}
         />
         <FontSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={setActiveTool}
+        />
+        <ImageSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={setActiveTool}
