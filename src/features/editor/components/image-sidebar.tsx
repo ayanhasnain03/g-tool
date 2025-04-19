@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 
 import { useGetImages } from "@/features/images/api/use-get-images";
 import { AlertTriangle, Loader } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface ImageSidebarProps {
   editor: Editor | undefined;
@@ -50,7 +52,35 @@ export const ImageSidebar = ({
       )}
       <ScrollArea>
         <div className="p-4">
-          <div className="grid grid-cols-2 gap-4"></div>
+          <div className="grid grid-cols-2 gap-4">
+            {data &&
+              data.map((image) => {
+                return (
+                  <button
+                    // onClick={() => editor?.addImage(image.urls.regular)}
+                    key={image.id}
+                    className="relative w-full h-[100px] group hover:opacity-75 \
+                    transition bg-muted-foreground rounded-sm overflow-hidden border"
+                  >
+                    <Image
+                      fill
+                      src={image.urls.small}
+                      alt={image.alt_description || "Image"}
+                      className="object-cover"
+                    />
+                    <Link
+                      href={image.links.html}
+                      target="_blank"
+                      className="opacity-0 group-hover:opacity-100 absolute \
+                    left-0 bottom-0 w-full text-[10px] truncate text-white \
+                    hover:underline p-1 bg-black/50 text-left"
+                    >
+                      {image.user.name}
+                    </Link>
+                  </button>
+                );
+              })}
+          </div>
         </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />

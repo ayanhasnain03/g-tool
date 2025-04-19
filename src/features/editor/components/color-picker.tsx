@@ -1,7 +1,21 @@
 "use client";
+
 import { colors } from "@/features/editor/types";
 import { rgbaObjectToString } from "@/features/editor/utils";
-import { ChromePicker, CirclePicker } from "react-color";
+import dynamic from "next/dynamic";
+
+const ChromePicker = dynamic(
+  () => import("react-color/lib/components/chrome/Chrome"),
+  {
+    ssr: false,
+  }
+);
+const CirclePicker = dynamic(
+  () => import("react-color/lib/components/circle/Circle"),
+  {
+    ssr: false,
+  }
+);
 
 interface ColorPickerProps {
   value: string;
