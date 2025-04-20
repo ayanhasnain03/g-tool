@@ -14,6 +14,7 @@ import { fabric } from "fabric";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FontSidebar } from "./font-sidebar";
 
+import { AiSidebar } from "./ai-sidebar";
 import { ImageSidebar } from "./image-sidebar";
 import { OpacitySidebar } from "./opacity-sidebar";
 import { StrokeWidthSidebar } from "./stroke-width-sidebar";
@@ -112,6 +113,11 @@ export const Editor = () => {
           onChangeActiveTool={setActiveTool}
         />
         <ImageSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={setActiveTool}
+        />
+        <AiSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={setActiveTool}
