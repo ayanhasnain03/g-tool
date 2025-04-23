@@ -1,6 +1,32 @@
 import { fabric } from "fabric";
 import { ITextboxOptions } from "fabric/fabric-impl";
 import * as material from "material-colors";
+
+export const filters = [
+  "none",
+  "polaroid",
+  "sepia",
+  "kodachrome",
+  "contrast",
+  "brightness",
+  "greyscale",
+  "brownie",
+  "vintage",
+  "technicolor",
+  "pixelate",
+  "invert",
+  "blur",
+  "sharpen",
+  "emboss",
+  "removecolor",
+  "blacknwhite",
+  "vibrance",
+  "blendcolor",
+  "huerotate",
+  "resize",
+  "saturation",
+  "gamma",
+] as const;
 export const fonts = [
   "Arial",
   "Arial Black",
@@ -68,14 +94,18 @@ export type ActiveTool =
   | "remove-bg"
   | "settings"
   | "templates";
-export const FILL_COLOR = "rgba(0,0,0,1)";
-export const STROKE_COLOR = "rgba(0,0,0,1)";
+export const FILL_COLOR = "rgba(0, 0, 0, 1)";
+export const STROKE_COLOR = "rgba(0, 0, 0, 1)";
 export const STROKE_WIDTH = 2;
 export const STROKE_DASH_ARRAY = [];
-export const FONT_FAMILY = "Arial";
 export const FONT_SIZE = 32;
+export const FONT_FAMILY = "Arial";
 export const FONT_WEIGHT = 400;
 export const FONT_STYLE = "normal";
+export const FONT_LINETHROUGH = false;
+export const FONT_UNDERLINE = false;
+export const TEXT_ALIGN = "left";
+
 export const CIRCLE_OPTIONS = {
   radius: 150,
   left: 100,
@@ -146,6 +176,7 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  changeImageFilter: (effect: (typeof filters)[number]) => void;
   addImage: (value: string) => void;
   delete: () => void;
   changeFontSize: (value: number) => void;

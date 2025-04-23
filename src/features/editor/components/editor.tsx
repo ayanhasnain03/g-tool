@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FontSidebar } from "./font-sidebar";
 
 import { AiSidebar } from "./ai-sidebar";
+import { FilterSidebar } from "./filter-sidebar";
 import { ImageSidebar } from "./image-sidebar";
 import { OpacitySidebar } from "./opacity-sidebar";
 import { StrokeWidthSidebar } from "./stroke-width-sidebar";
@@ -116,6 +117,11 @@ export const Editor = () => {
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={setActiveTool}
+        />
+        <FilterSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
         />
         <AiSidebar
           editor={editor}
