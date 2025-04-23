@@ -22,7 +22,11 @@ import { isTextType } from "@/features/editor/utils";
 import { createFilter } from "@/lib/utils";
 import { fabric } from "fabric";
 import { useCallback, useMemo, useState } from "react";
+import { useClipboard } from "./useClipboard";
+
 const buildEditor = ({
+  copy,
+  paste,
   canvas,
   fillColor,
   setFillColor,
@@ -54,6 +58,8 @@ const buildEditor = ({
   };
 
   return {
+    onCopy: () => copy(),
+    onPaste: () => paste(),
     changeImageFilter: (effect) => {
       const objects = canvas.getActiveObjects();
 
@@ -458,6 +464,9 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
   const [strokeDashArray, setStrokeDashArray] =
     useState<number[]>(STROKE_DASH_ARRAY);
+  const { copy, paste } = useClipboard({
+    canvas,
+  });
 
   useAutoResize({
     canvas,
@@ -473,6 +482,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const editor = useMemo(() => {
     if (canvas) {
       return buildEditor({
+        copy,
+        paste,
         canvas,
         fillColor,
         strokeWidth,
@@ -489,6 +500,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     }
     return undefined;
   }, [
+    copy,
+    paste,
     canvas,
     fillColor,
     strokeWidth,
