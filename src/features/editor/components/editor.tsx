@@ -18,6 +18,7 @@ import { AiSidebar } from "./ai-sidebar";
 import { FilterSidebar } from "./filter-sidebar";
 import { ImageSidebar } from "./image-sidebar";
 import { OpacitySidebar } from "./opacity-sidebar";
+import { RemoveBgSidebar } from "./remove-bg-sidebar";
 import { StrokeWidthSidebar } from "./stroke-width-sidebar";
 import { TextSidebar } from "./text-sidebar";
 
@@ -124,6 +125,11 @@ export const Editor = () => {
           onChangeActiveTool={onChangeActiveTool}
         />
         <AiSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={setActiveTool}
+        />
+        <RemoveBgSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={setActiveTool}

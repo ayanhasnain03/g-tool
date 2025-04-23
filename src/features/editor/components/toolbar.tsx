@@ -5,6 +5,7 @@ import {
   ArrowDown,
   ArrowUp,
   ChevronDown,
+  SquareSplitHorizontal,
   Trash,
 } from "lucide-react";
 import { useState } from "react";
@@ -350,7 +351,19 @@ export const Toolbar = ({
           </Hint>
         </div>
       )}
-
+      {isImage && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Remove Background" side="bottom" sideOffset={5}>
+            <Button
+              onClick={() => onChangeActiveTool("remove-bg")}
+              size="icon"
+              variant={activeTool === "remove-bg" ? "secondary" : "ghost"}
+            >
+              <SquareSplitHorizontal className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
       <div className="flex items-center h-full justify-center">
         <Hint label="Bring Forward" side="bottom" sideOffset={5}>
           <Button

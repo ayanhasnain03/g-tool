@@ -31,7 +31,7 @@ export const FilterSidebar = ({
         description="Apply a filter to selected image."
       />
 
-      <ScrollArea>
+      <ScrollArea className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-2 border-b">
           {filters.map((filter) => (
             <Button
