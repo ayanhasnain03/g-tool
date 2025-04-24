@@ -1,16 +1,17 @@
-import { AlertTriangle, Loader } from "lucide-react";
+import { createId } from "@paralleldrive/cuid2";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
-import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
-import { ActiveTool, Editor } from "@/features/editor/types";
-
-import { useGetImages } from "@/features/images/api/use-get-images";
-
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { type ActiveTool, type Editor } from "@/features/editor/types";
+import { useGetImages } from "@/features/images/api/use-get-images";
 import { UploadButton } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
+
+import { ToolSidebarClose } from "./tool-sidebar-close";
+import { ToolSidebarHeader } from "./tool-sidebar-header";
+
 interface ImageSidebarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
@@ -24,29 +25,38 @@ export const ImageSidebar = ({
 }: ImageSidebarProps) => {
   const { data, isLoading, isError } = useGetImages();
 
-  const onClose = () => {
-    onChangeActiveTool("select");
-  };
+  const onClose = () => onChangeActiveTool("select");
 
   return (
     <aside
       className={cn(
-        "bg-white relative border-r z-[40] w-[360px] h-full flex flex-col",
+        "relative z-40 flex h-full w-[360px] flex-col border bg-white",
         activeTool === "images" ? "visible" : "hidden"
       )}
     >
       <ToolSidebarHeader
         title="Images"
-        description="Add images to your canvas"
+        description="Add images to your canvas."
       />
-      <div className="p-4 border-b">
+
+      <div className="border-b p-4">
         <UploadButton
           appearance={{
             button: "w-full text-sm font-medium",
             allowedContent: "hidden",
           }}
+          onBeforeUploadBegin={(files) => {
+            return files.map((f) => {
+              const fileExt = f.name.split(".").at(-1) ?? "png";
+              const fileName = `${createId()}.${fileExt}`;
+
+              return new File([f], fileName, {
+                type: f.type,
+              });
+            });
+          }}
           content={{
-            button: "Upload Image",
+            button: "Upload image",
           }}
           endpoint="imageUploader"
           onClientUploadComplete={(res) => {
@@ -54,19 +64,22 @@ export const ImageSidebar = ({
           }}
         />
       </div>
+
       {isLoading && (
-        <div className="flex items-center justify-center flex-1">
-          <Loader className="size-4 text-muted-foreground animate-spin" />
+        <div className="flex flex-1 items-center justify-center">
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
         </div>
       )}
+
       {isError && (
-        <div className="flex flex-col gap-y-4 items-center justify-center flex-1">
+        <div className="flex flex-1 flex-col items-center justify-center gap-y-4">
           <AlertTriangle className="size-4 text-muted-foreground" />
-          <p className="text-muted-foreground text-xs">
-            Failed to fetch images
+          <p className="text-xs text-muted-foreground">
+            Failed to fetch images.
           </p>
         </div>
       )}
+
       <ScrollArea className="flex-1 overflow-y-auto">
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
@@ -74,21 +87,21 @@ export const ImageSidebar = ({
               data.map((image) => {
                 return (
                   <button
-                    onClick={() => editor?.addImage(image.urls.regular)}
                     key={image.id}
-                    className="relative w-full h-[100px] group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
+                    onClick={() => editor?.addImage(image.urls.regular)}
+                    className="group relative h-[100px] w-full overflow-hidden rounded-sm border bg-muted transition hover:opacity-75"
                   >
                     <Image
-                      src={image?.urls?.small || image?.urls?.thumb}
-                      alt={image.alt_description || "Image"}
-                      className="object-cover"
-                      loading="lazy"
                       fill
+                      src={image.urls.small}
+                      alt={image.alt_description || "Image from unsplash"}
+                      className="object-cover"
                     />
+
                     <Link
-                      target="_blank"
                       href={image.links.html}
-                      className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white hover:underline p-1 bg-black/50 text-left"
+                      target="_blank"
+                      className="absolute bottom-0 left-0 w-full truncate bg-black/50 p-1 text-left text-[10px] text-white opacity-0 hover:underline group-hover:opacity-100"
                     >
                       {image.user.name}
                     </Link>
@@ -98,6 +111,7 @@ export const ImageSidebar = ({
           </div>
         </div>
       </ScrollArea>
+
       <ToolSidebarClose onClick={onClose} />
     </aside>
   );
