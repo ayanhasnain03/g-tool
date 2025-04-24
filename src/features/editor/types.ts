@@ -178,6 +178,8 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  enableDrawingMode: () => void;
+  disableDrawingMode: () => void;
   onCopy: () => void;
   onPaste: () => void;
   changeImageFilter: (effect: (typeof filters)[number]) => void;
