@@ -25,6 +25,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useClipboard } from "./useClipboard";
 
 const buildEditor = ({
+  autoZoom,
   copy,
   paste,
   canvas,
@@ -58,6 +59,23 @@ const buildEditor = ({
   };
 
   return {
+    getWorkspace,
+    changeSize: (size: { width: number; height: number }) => {
+      const workspace = getWorkspace();
+
+      workspace?.set(size);
+      autoZoom();
+
+      // TODO: Save
+    },
+    changeBackground: (background: string) => {
+      const workspace = getWorkspace();
+
+      workspace?.set({ fill: background });
+      canvas.renderAll();
+
+      // TODO: Save
+    },
     enableDrawingMode: () => {
       canvas.discardActiveObject();
       canvas.renderAll();
@@ -483,7 +501,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     canvas,
   });
 
-  useAutoResize({
+  const { autoZoom } = useAutoResize({
     canvas,
     container,
   });
@@ -497,6 +515,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const editor = useMemo(() => {
     if (canvas) {
       return buildEditor({
+        autoZoom,
         copy,
         paste,
         canvas,
@@ -515,6 +534,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     }
     return undefined;
   }, [
+    autoZoom,
     copy,
     paste,
     canvas,

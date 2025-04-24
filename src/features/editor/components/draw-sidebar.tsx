@@ -52,7 +52,7 @@ export const DrawSidebar = ({
         description="Modify brush settings."
       />
 
-      <ScrollArea>
+      <ScrollArea className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-6 border-b">
           <Label className="text-sm">Brush width</Label>
 

@@ -31,7 +31,7 @@ export const TextSidebar = ({
         title="Text"
         description="Add text to your canvas" // -19:57
       />
-      <ScrollArea>
+      <ScrollArea className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4 border-b">
           <Button className="w-full" onClick={() => editor?.addText("TextBox")}>
             Add a textbox
