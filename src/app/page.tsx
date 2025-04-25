@@ -1,9 +1,12 @@
+import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 
-function Home() {
+async function Home() {
+  const session = await auth();
+
   return (
     <div>
-      <Button>Click me !</Button>
+      {JSON.stringify(session)}
     </div>
   );
 }
