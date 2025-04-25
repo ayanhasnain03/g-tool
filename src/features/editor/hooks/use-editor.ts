@@ -25,6 +25,7 @@ import { fabric } from "fabric";
 import { useCallback, useMemo, useState } from "react";
 import { useClipboard } from "./useClipboard";
 import { useHistory } from "./use-history";
+import { useHotkeys } from "./use-hotkeys";
 
 const buildEditor = ({
   save,
@@ -543,7 +544,14 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     setSelectedObjects,
     clearSelectionCallback,
   });
-
+  useHotkeys({
+    canvas,
+    undo,
+    redo,
+    save,
+    copy,
+    paste,
+  });
   const editor = useMemo(() => {
     if (canvas) {
       return buildEditor({
