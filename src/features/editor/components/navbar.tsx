@@ -46,7 +46,7 @@ editor?.loadJson(reader.result as string)
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="start" className="min-w-60">
-            <DropdownMenuItem onClick={() => openFilePicker()} className="flex items-center gap-x-2">
+            <DropdownMenuItem onClick={() => openFilePicker( )} className="flex items-center gap-x-2">
               <CiFileOn className="size-8" />
 
               <div>
