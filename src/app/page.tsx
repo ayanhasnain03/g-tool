@@ -5,9 +5,10 @@ import { protectedServer } from "@/features/auth/utils";
 async function Home() {
 
 await protectedServer()
+const session = await auth();
   return (
     <div>
-     You are logged In
+      <h1>{JSON.stringify(session)}</h1>
     </div>
   );
 }
