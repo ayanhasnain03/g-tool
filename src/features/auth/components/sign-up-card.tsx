@@ -10,9 +10,10 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
+import { TriangleAlert } from 'lucide-react';
 
 export const SignUpCard = () => {
-  const { mutate: signUp, isPending,error } = useSignUp();
+  const { mutate: signUp, isPending, error } = useSignUp();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,12 +49,16 @@ export const SignUpCard = () => {
     <Card className="size-full p-8">
       <CardHeader className="px-0 pt-0">
         <CardTitle>Create an account</CardTitle>
-
         <CardDescription>Use your email or another service to continue.</CardDescription>
       </CardHeader>
+
+      {/* Error handling */}
       {!!error && (
-        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
-          <TriangleAlert className="size-4" />
+        <div
+          className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6"
+          aria-live="assertive"
+        >
+          <TriangleAlert className="w-5 h-5" />
           <p>{error.message || 'Something went wrong!'}</p>
         </div>
       )}
@@ -103,7 +108,7 @@ export const SignUpCard = () => {
             size="lg"
             className="w-full relative"
           >
-            <FcGoogle className="size-5 mr-2 top-2.5 left-2.5 absolute" />
+            <FcGoogle className="w-5 h-5 mr-2 top-2.5 left-2.5 absolute" />
             Continue with Google
           </Button>
 
@@ -114,7 +119,7 @@ export const SignUpCard = () => {
             size="lg"
             className="w-full relative"
           >
-            <FaGithub className="size-5 mr-2 top-2.5 left-2.5 absolute" />
+            <FaGithub className="w-5 h-5 mr-2 top-2.5 left-2.5 absolute" />
             Continue with GitHub
           </Button>
         </div>
