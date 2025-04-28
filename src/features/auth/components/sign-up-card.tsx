@@ -12,7 +12,7 @@ import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 
 export const SignUpCard = () => {
-  const { mutate: signUp, isPending } = useSignUp();
+  const { mutate: signUp, isPending,error } = useSignUp();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -33,7 +33,7 @@ export const SignUpCard = () => {
             email,
             password,
             redirect: true,
-            callbackUrl: '/', // ✅ Updated to callbackUrl
+            callbackUrl: '/',
           });
         },
       },
@@ -51,6 +51,12 @@ export const SignUpCard = () => {
 
         <CardDescription>Use your email or another service to continue.</CardDescription>
       </CardHeader>
+      {!!error && (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+          <TriangleAlert className="size-4" />
+          <p>{error.message || 'Something went wrong!'}</p>
+        </div>
+      )}
 
       <CardContent className="space-y-5 px-0 pb-0">
         <form onSubmit={onCredentialSignUp} className="space-y-2.5">

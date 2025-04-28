@@ -4,7 +4,8 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
-
+import { TriangleAlert } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
@@ -12,22 +13,28 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 
 export const SignInCard = () => {
+ const searchParams = useSearchParams();
  const [email, setEmail] = useState('');
  const [password, setPassword] = useState('');
+ const [isPending, setIsPending] = useState(false);
+
+ const error = searchParams.get('error');
  const onCredentialSignIn = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
+  setIsPending(true);
 
   signIn('credentials', {
-    email,
-    password,
-    redirectTo: '/',
-  });
+   email,
+   password,
+   redirectTo: '/',
+ }).then(() => setIsPending(false));
 };
 
-  const onProviderSignIn = (provider: 'github' | 'google') => {
-    signIn(provider, { redirectTo: '/' });
-  };
+const onProviderSignIn = (provider: 'github' | 'google') => {
+ setIsPending(true);
 
+ signIn(provider, { redirectTo: '/' }).then(() => setIsPending(false));
+};
 
   return (
    <Card className="size-full p-8">
@@ -36,31 +43,44 @@ export const SignInCard = () => {
 
        <CardDescription>Use your email or another service to continue.</CardDescription>
      </CardHeader>
+     {!!error && (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+          <TriangleAlert className="size-4" />
+          <p>Invalid Email or Password!</p>
+        </div>
+      )}
 
-     <CardContent className="space-y-5 px-0 pb-0">
-       <form onSubmit={onCredentialSignIn} className="space-y-2.5">
-         <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" required />
+      <CardContent className="space-y-5 px-0 pb-0">
+        <form onSubmit={onCredentialSignIn} className="space-y-2.5">
+          <Input disabled={isPending} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" required />
 
-         <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+          <Input
+            disabled={isPending}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
 
-         <Button type="submit" size="lg" className="w-full">
-           Continue
-         </Button>
-       </form>
+          <Button disabled={isPending} type="submit" size="lg" className="w-full">
+            Continue
+          </Button>
+        </form>
 
-       <Separator />
+        <Separator />
 
-       <div className="flex flex-col gap-y-2.5">
-         <Button onClick={() => onProviderSignIn('google')} variant="outline" size="lg" className="w-full relative">
-           <FcGoogle className="size-5 mr-2 top-2.5 left-2.5 absolute" />
-           Continue with Google
-         </Button>
+        <div className="flex flex-col gap-y-2.5">
+          <Button disabled={isPending} onClick={() => onProviderSignIn('google')} variant="outline" size="lg" className="w-full relative">
+            <FcGoogle className="size-5 mr-2 top-2.5 left-2.5 absolute" />
+            Continue with Google
+          </Button>
 
-         <Button onClick={() => onProviderSignIn('github')} variant="outline" size="lg" className="w-full relative">
-           <FaGithub className="size-5 mr-2 top-2.5 left-2.5 absolute" />
-           Continue with GitHub
-         </Button>
-       </div>
+          <Button disabled={isPending} onClick={() => onProviderSignIn('github')} variant="outline" size="lg" className="w-full relative">
+            <FaGithub className="size-5 mr-2 top-2.5 left-2.5 absolute" />
+            Continue with GitHub
+          </Button>
+          </div>
 
        <p className="text-xs text-muted-foreground">
          Don&apos;t have an account?{' '}
