@@ -1,12 +1,13 @@
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
+import { protectedServer } from "@/features/auth/utils";
 
 async function Home() {
-  const session = await auth();
 
+await protectedServer()
   return (
     <div>
-      {JSON.stringify(session)}
+     You are logged In
     </div>
   );
 }
