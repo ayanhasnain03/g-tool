@@ -8,13 +8,7 @@ const SignInPage = async () => {
 
   if (session) redirect('/');
 
-  return (
-    <div className="h-full flex items-center justify-center">
-      <div className="size-full md:h-auto md:w-[420px]">
-        <SignInCard />
-      </div>
-    </div>
-  );
+  return <SignInCard />
 };
 
 export default SignInPage;
