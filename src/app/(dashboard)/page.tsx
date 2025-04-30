@@ -1,15 +1,12 @@
-import { auth } from "@/auth";
-import { Button } from "@/components/ui/button";
+
 import { protectedServer } from "@/features/auth/utils";
-
+import { Banner } from "./banner";
 async function Home() {
-
 await protectedServer()
-const session = await auth();
   return (
-    <div>
-      <h1>{JSON.stringify(session)}</h1>
-    </div>
+<div className="flex flex-col space-y-6 max-w-screen-xl mx-auto pb-10">
+       <Banner />
+     </div>
   );
 }
 
