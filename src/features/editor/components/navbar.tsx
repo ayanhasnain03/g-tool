@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import type { ActiveTool, Editor } from '@/features/editor/types';
 
 import { Logo } from './logo';
+import { UserButton } from '@/features/auth/components/user-button';
 
 interface NavbarProps {
   editor: Editor | undefined;
@@ -131,8 +132,7 @@ editor?.loadJson(reader.result as string)
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* TODO: Add user button */}
+<UserButton/>
         </div>
       </div>
     </nav>
