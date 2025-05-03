@@ -1,5 +1,5 @@
 {
-  "id": "61cfb761-04a7-4bbc-8175-b25ee15e13ab",
+  "id": "73a8e7b1-911d-4144-8d16-be504ffe9e75",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -91,7 +91,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "account_provider_providerAccountId_pk": {
+          "name": "account_provider_providerAccountId_pk",
+          "columns": [
+            "provider",
+            "providerAccountId"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -166,7 +174,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "authenticator_userId_credentialID_pk": {
+          "name": "authenticator_userId_credentialID_pk",
+          "columns": [
+            "userId",
+            "credentialID"
+          ]
+        }
+      },
       "uniqueConstraints": {
         "authenticator_credentialID_unique": {
           "name": "authenticator_credentialID_unique",
@@ -176,6 +192,99 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.project": {
+      "name": "project",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "json": {
+          "name": "json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "width": {
+          "name": "width",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thumbnailUrl": {
+          "name": "thumbnailUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isTemplate": {
+          "name": "isTemplate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isPro": {
+          "name": "isPro",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "project_userId_user_id_fk": {
+          "name": "project_userId_user_id_fk",
+          "tableFrom": "project",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -258,6 +367,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -301,7 +416,15 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "verificationToken_identifier_token_pk": {
+          "name": "verificationToken_identifier_token_pk",
+          "columns": [
+            "identifier",
+            "token"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},

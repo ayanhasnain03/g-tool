@@ -9,7 +9,8 @@ CREATE TABLE "account" (
 	"token_type" text,
 	"scope" text,
 	"id_token" text,
-	"session_state" text
+	"session_state" text,
+	CONSTRAINT "account_provider_providerAccountId_pk" PRIMARY KEY("provider","providerAccountId")
 );
 --> statement-breakpoint
 CREATE TABLE "authenticator" (
@@ -21,7 +22,22 @@ CREATE TABLE "authenticator" (
 	"credentialDeviceType" text NOT NULL,
 	"credentialBackedUp" boolean NOT NULL,
 	"transports" text,
+	CONSTRAINT "authenticator_userId_credentialID_pk" PRIMARY KEY("userId","credentialID"),
 	CONSTRAINT "authenticator_credentialID_unique" UNIQUE("credentialID")
+);
+--> statement-breakpoint
+CREATE TABLE "project" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"userId" text NOT NULL,
+	"json" text NOT NULL,
+	"height" integer NOT NULL,
+	"width" integer NOT NULL,
+	"thumbnailUrl" text,
+	"isTemplate" boolean,
+	"isPro" boolean,
+	"createdAt" timestamp NOT NULL,
+	"updatedAt" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "session" (
@@ -36,15 +52,18 @@ CREATE TABLE "user" (
 	"email" text,
 	"emailVerified" timestamp,
 	"image" text,
+	"password" text,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 CREATE TABLE "verificationToken" (
 	"identifier" text NOT NULL,
 	"token" text NOT NULL,
-	"expires" timestamp NOT NULL
+	"expires" timestamp NOT NULL,
+	CONSTRAINT "verificationToken_identifier_token_pk" PRIMARY KEY("identifier","token")
 );
 --> statement-breakpoint
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "authenticator" ADD CONSTRAINT "authenticator_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "project" ADD CONSTRAINT "project_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
