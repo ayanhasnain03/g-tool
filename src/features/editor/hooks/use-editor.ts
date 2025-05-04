@@ -570,7 +570,7 @@ downloadFile(fileString,'json')
   };
 };
 
-export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
+export const useEditor = ({ clearSelectionCallback,saveCallback  }: EditorHookProps) => {
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [container, setConatiner] = useState<HTMLDivElement | null>(null);
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -582,9 +582,10 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     useState<number[]>(STROKE_DASH_ARRAY);
     useWindowEvents()
   const { save, canRedo, canUndo, undo, redo, canvasHistory, setHistoryIndex } =
-    useHistory({ canvas });
+    useHistory({ canvas,saveCallback, });
   const { copy, paste } = useClipboard({
     canvas,
+
   });
 
   const { autoZoom } = useAutoResize({

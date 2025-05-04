@@ -5,10 +5,11 @@ import { useCallback, useRef, useState } from 'react';
 import { JSON_KEYS } from '@/features/editor/types';
 
 interface UseHistoryProps {
-  canvas: fabric.Canvas | null;
+ canvas: fabric.Canvas | null;
+ saveCallback?: (values: { json: string; height: number; width: number }) => void;
 }
 
-export const useHistory = ({ canvas }: UseHistoryProps) => {
+export const useHistory = ({ canvas,saveCallback  }: UseHistoryProps) => {
   const [historyIndex, setHistoryIndex] = useState(0);
 
   const canvasHistory = useRef<string[]>([]);
@@ -33,8 +34,11 @@ export const useHistory = ({ canvas }: UseHistoryProps) => {
         canvasHistory.current.push(json);
         setHistoryIndex(canvasHistory.current.length - 1);
       }
+      const workspace = canvas.getObjects().find((object) => object.name === 'clip');
+      const height = workspace?.height || 0;
+      const width = workspace?.width || 0;
 
-      // TODO: Save callback
+      saveCallback?.({ json, height, width });
     },
     [canvas],
   );
