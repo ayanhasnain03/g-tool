@@ -22,11 +22,12 @@ import {
 import { downloadFile, isTextType, transformText } from "@/features/editor/utils";
 import { createFilter } from "@/lib/utils";
 import { fabric } from "fabric";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useClipboard } from "./useClipboard";
 import { useHistory } from "./use-history";
 import { useHotkeys } from "./use-hotkeys";
 import { useWindowEvents } from "./use-window-events";
+import { useLoadState } from "./use-load-state";
 
 const buildEditor = ({
   save,
@@ -570,7 +571,12 @@ downloadFile(fileString,'json')
   };
 };
 
-export const useEditor = ({ clearSelectionCallback,saveCallback  }: EditorHookProps) => {
+export const useEditor = ({ defaultState, defaultWidth, defaultHeight, clearSelectionCallback, saveCallback }: EditorHookProps) => {
+ const initialState = useRef(defaultState);
+ const initialWidth = useRef(defaultWidth);
+ const initialHeight = useRef(defaultHeight);
+
+
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [container, setConatiner] = useState<HTMLDivElement | null>(null);
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -582,7 +588,7 @@ export const useEditor = ({ clearSelectionCallback,saveCallback  }: EditorHookPr
     useState<number[]>(STROKE_DASH_ARRAY);
     useWindowEvents()
   const { save, canRedo, canUndo, undo, redo, canvasHistory, setHistoryIndex } =
-    useHistory({ canvas,saveCallback, });
+    useHistory({ canvas,saveCallback });
   const { copy, paste } = useClipboard({
     canvas,
 
@@ -607,6 +613,13 @@ export const useEditor = ({ clearSelectionCallback,saveCallback  }: EditorHookPr
     copy,
     paste,
   });
+  useLoadState({
+   canvas,
+   autoZoom,
+   initialState,
+   canvasHistory,
+   setHistoryIndex,
+ });
   const editor = useMemo(() => {
     if (canvas) {
       return buildEditor({
@@ -669,8 +682,8 @@ export const useEditor = ({ clearSelectionCallback,saveCallback  }: EditorHookPr
         cornerStrokeColor: "#3b82f6",
       });
       const initialWorkspace = new fabric.Rect({
-        width: 900,
-        height: 1200,
+       width: initialWidth.current,
+       height: initialHeight.current,
         name: "clip",
         fill: "white",
         selectable: false,

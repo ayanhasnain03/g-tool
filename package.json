@@ -11,7 +11,6 @@
     "db:migrate": "npx drizzle-kit migrate",
     "db:studio": "npx drizzle-kit studio",
     "db:push": "npx drizzle-kit push"
-
   },
   "dependencies": {
     "@auth/core": "^0.39.0",
@@ -38,6 +37,7 @@
     "drizzle-zod": "^0.7.1",
     "fabric": "^5.5.1",
     "hono": "^4.7.7",
+    "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.486.0",
     "material-colors": "^1.2.6",
     "next": "15.2.4",

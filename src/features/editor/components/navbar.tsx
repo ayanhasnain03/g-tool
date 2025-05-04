@@ -1,6 +1,7 @@
 'use client';
-import { ChevronDown, Download, MousePointerClick, Redo2, Undo2 } from 'lucide-react';
-import { BsCloudCheck, BsFiletypeJpg, BsFiletypeJson, BsFiletypePng, BsFiletypeSvg } from 'react-icons/bs';
+import { useMutationState } from '@tanstack/react-query';
+import { ChevronDown, Download, Loader2, MousePointerClick, Redo2, Undo2 } from 'lucide-react';
+import { BsCloudCheck, BsCloudSlash, BsFiletypeJpg, BsFiletypeJson, BsFiletypePng, BsFiletypeSvg } from 'react-icons/bs';
 import { CiFileOn } from 'react-icons/ci';
 import { useFilePicker } from "use-file-picker"
 import { Hint } from '@/components/hint';
@@ -13,12 +14,26 @@ import { Logo } from './logo';
 import { UserButton } from '@/features/auth/components/user-button';
 
 interface NavbarProps {
+ id: string;
  editor: Editor | undefined;
  activeTool: ActiveTool;
  onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
-export const Navbar = ({ editor, activeTool, onChangeActiveTool }: NavbarProps) => {
+export const Navbar = ({id, editor, activeTool, onChangeActiveTool }: NavbarProps) => {
+ const data = useMutationState({
+  filters: {
+    mutationKey: ['project', id],
+    exact: true,
+  },
+  select: (mutation) => mutation.state.status,
+});
+
+const currentStatus = data[data.length - 1];
+
+const isError = currentStatus === 'error';
+const isPending = currentStatus === 'pending';
+
  const { openFilePicker } = useFilePicker({
   accept: ".json",
   onFilesSuccessfullySelected: ({ plainFiles }: any) => {
@@ -76,14 +91,27 @@ export const Navbar = ({ editor, activeTool, onChangeActiveTool }: NavbarProps) 
       <Redo2 className="size-4" />
      </Button>
     </Hint>
-
     <Separator orientation="vertical" className="mx-2" />
 
-    <div className="flex items-center gap-x-2">
-     <BsCloudCheck className="size-[20px] text-muted-foreground" />
-
-     <p className="text-xs text-muted-foreground">Saved</p>
+<div className="flex items-center gap-2">
+  {isPending ? (
+    <div className="flex items-center gap-1.5">
+      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+      <p className="text-xs text-muted-foreground">Saving...</p>
     </div>
+  ) : isError ? (
+    <div className="flex items-center gap-1.5">
+      <BsCloudSlash className="w-5 h-5 text-red-500" />
+      <p className="text-xs text-red-500">Failed to save</p>
+    </div>
+  ) : (
+    <div className="flex items-center gap-1.5">
+      <BsCloudCheck className="w-5 h-5 text-green-500" />
+      <p className="text-xs text-green-500">Saved</p>
+    </div>
+  )}
+</div>
+
 
     <div className="ml-auto flex items-center gap-x-4">
      <DropdownMenu modal={false}>
