@@ -2,7 +2,7 @@
 
 import { fabric } from 'fabric';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import debounce from 'lodash.debounce';
+import debounce from 'lodash/debounce';
 import { useEditor } from '@/features/editor/hooks/use-editor';
 import { type ActiveTool, selectionDependentTools } from '@/features/editor/types';
 import type { ResponseType } from '@/features/projects/api/use-get-project';
