@@ -65,6 +65,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/fabric": "^5.3.10",
+    "@types/lodash": "^4.17.16",
     "@types/material-colors": "^1.2.3",
     "@types/node": "^20",
     "@types/react": "^19",
