@@ -28,6 +28,7 @@ import { OpacitySidebar } from './opacity-sidebar';
 import { SettingsSidebar } from './setting-sidebar';
 import { Footer } from './Footer';
 import { useUpdateProject } from '@/features/projects/api/use-update-project';
+import { TemplateSidebar } from './template-sidebar';
 
 interface EditorProps {
  initialData: ResponseType;
@@ -40,21 +41,21 @@ export const Editor = ({ initialData }: EditorProps) => {
  const [activeTool, setActiveTool] = useState<ActiveTool>('select');
  const canvasRef = useRef<HTMLCanvasElement>(null);
  const containerRef = useRef<HTMLDivElement>(null);
-// eslint-disable-next-line react-hooks/exhaustive-deps
-const debouncedSave = useCallback(
- debounce((values: { json: string; height: number; width: number }) => {
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ const debouncedSave = useCallback(
+  debounce((values: { json: string; height: number; width: number }) => {
    updateProject(values);
- }, 500),
- [updateProject],
-);
+  }, 500),
+  [updateProject],
+ );
  const onClearSelection = useCallback(() => {
   if (selectionDependentTools.includes(activeTool)) setActiveTool('select');
  }, [activeTool]);
 
  const { init, editor } = useEditor({
- defaultState: initialData.json,
-    defaultWidth: initialData.width,
-    defaultHeight: initialData.height,
+  defaultState: initialData.json,
+  defaultWidth: initialData.width,
+  defaultHeight: initialData.height,
   clearSelectionCallback: onClearSelection,
   saveCallback: debouncedSave,
  });
@@ -111,7 +112,7 @@ const debouncedSave = useCallback(
     <RemoveBgSidebar editor={editor} activeTool={activeTool} onChangeActiveTool={onChangeActiveTool} />
     <DrawSidebar editor={editor} activeTool={activeTool} onChangeActiveTool={onChangeActiveTool} />
     <SettingsSidebar editor={editor} activeTool={activeTool} onChangeActiveTool={onChangeActiveTool} />
-
+    <TemplateSidebar editor={editor} activeTool={activeTool} onChangeActiveTool={onChangeActiveTool} />
     <main className="bg-muted flex-1 overflow-auto relative flex flex-col">
      <Toolbar
       editor={editor}

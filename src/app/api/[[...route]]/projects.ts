@@ -1,6 +1,6 @@
 import { verifyAuth } from '@hono/auth-js';
 import { zValidator } from '@hono/zod-validator';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { z } from 'zod';
 
@@ -8,35 +8,59 @@ import { db } from '@/db/drizzle';
 import { projects, projectsInsertSchema } from '@/db/schema';
 
 const app = new Hono()
-.delete(
- '/:id',
- verifyAuth(),
- zValidator(
+ .get(
+  '/templates',
+  verifyAuth(),
+  zValidator(
+   'query',
+   z.object({
+    page: z.coerce.number(),
+    limit: z.coerce.number(),
+   }),
+  ),
+  async (ctx) => {
+   const { page, limit } = ctx.req.valid('query');
+
+   const data = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.isTemplate, true))
+    .limit(limit)
+    .offset((page - 1) * limit)
+    .orderBy(asc(projects.isPro), desc(projects.updatedAt));
+
+   return ctx.json(data);
+  },
+ )
+ .delete(
+  '/:id',
+  verifyAuth(),
+  zValidator(
    'param',
    z.object({
-     id: z.string(),
+    id: z.string(),
    }),
- ),
- async (ctx) => {
+  ),
+  async (ctx) => {
    const auth = ctx.get('authUser');
    const { id } = ctx.req.valid('param');
 
    if (!auth.token?.id) {
-     return ctx.json('Unauthorized!', 401);
+    return ctx.json('Unauthorized!', 401);
    }
 
    const [data] = await db
-     .delete(projects)
-     .where(and(eq(projects.id, id), eq(projects.userId, auth.token.id)))
-     .returning();
+    .delete(projects)
+    .where(and(eq(projects.id, id), eq(projects.userId, auth.token.id)))
+    .returning();
 
    if (!data) {
-     return ctx.json('Not found.', 404);
+    return ctx.json('Not found.', 404);
    }
 
    return ctx.json(id);
- },
-)
+  },
+ )
  .post("/:id/duplicate",
   verifyAuth(),
   zValidator("param", z.object({
@@ -86,7 +110,7 @@ const app = new Hono()
    const data = await db
     .select()
     .from(projects)
-    .where(eq(projects.userId, auth.token.id))
+    .where(and(eq(projects.userId, auth.token.id), eq(projects.isTemplate, false)))
     .limit(limit)
     .offset((page - 1) * limit)
     .orderBy(desc(projects.updatedAt))

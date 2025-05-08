@@ -10,10 +10,16 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "utfs.io",
+        port: "",
       },
       {
         protocol: "https",
         hostname: "replicate.delivery",
+      },
+      {
+        protocol: "https",
+        hostname: "8w23nzz55v.ufs.sh",
+        port: "",
       },
     ],
   },
