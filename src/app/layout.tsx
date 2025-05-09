@@ -8,6 +8,8 @@ import { auth } from '@/auth';
 import { extractRouterConfig } from "uploadthing/server";
 import { appFileRouter } from "./api/uploadthing/core";
 import { Toaster } from "@/components/ui/sonner";
+import { Modals } from "@/components/modals";
+;
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -39,6 +41,7 @@ export default async function RootLayout({
         <Providers>
         <NextSSRPlugin routerConfig={extractRouterConfig(appFileRouter)} />
         <Toaster theme="light" closeButton richColors />
+        <Modals/>
          {children}
          </Providers>
       </body>

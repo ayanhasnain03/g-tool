@@ -4,6 +4,7 @@ import { useRemoveBg } from "@/features/ai/api/use-image-background";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
 import { ActiveTool, Editor } from "@/features/editor/types";
+import { usePaywall } from "@/features/subscription/hooks/use-paywall";
 import { cn } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 import Image from "next/image";
@@ -19,6 +20,8 @@ export const RemoveBgSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: RemoveBgSidebarProps) => {
+  const {shouldBlock,triggerPaywall} = usePaywall();
+
   const { mutate: removeBg, isPending: isRemovingBg } = useRemoveBg();
   const selectedObject = editor?.selectedObjects[0];
   //@ts-ignore
@@ -27,6 +30,10 @@ export const RemoveBgSidebar = ({
     onChangeActiveTool("select");
   };
   const onRemove = () => {
+   if(shouldBlock){
+    triggerPaywall();
+    return;
+   }
     removeBg(
       {
         image: imageSrc,

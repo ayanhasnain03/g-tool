@@ -1,4 +1,4 @@
-import { AlertTriangle, Loader2 } from 'lucide-react';
+import { AlertTriangle, Loader2 ,Crown} from 'lucide-react';
 import Image from 'next/image';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 
 import { ToolSidebarClose } from './tool-sidebar-close';
 import { ToolSidebarHeader } from './tool-sidebar-header';
+import { usePaywall } from '@/features/subscription/hooks/use-paywall';
 
 interface TemplateSidebarProps {
   editor: Editor | undefined;
@@ -17,6 +18,8 @@ interface TemplateSidebarProps {
 }
 
 export const TemplateSidebar = ({ editor, activeTool, onChangeActiveTool }: TemplateSidebarProps) => {
+  const {shouldBlock,triggerPaywall} = usePaywall();
+
   const [ConfirmDialog, confirm] = useConfirm('Are you sure?', 'You are about to replace the current project with this template.');
 
   const { data, isLoading, isError } = useGetTemplates({ page: '1', limit: '20' });
@@ -24,7 +27,13 @@ export const TemplateSidebar = ({ editor, activeTool, onChangeActiveTool }: Temp
   const onClose = () => onChangeActiveTool('select');
 
   const onClick = async (template: ResponseType) => {
-    // TODO: check if template is pro
+
+   if(template.isPro && shouldBlock){
+    triggerPaywall();
+    return;
+   }
+
+
     const ok = await confirm();
 
     if (!ok) return;
@@ -68,7 +77,11 @@ export const TemplateSidebar = ({ editor, activeTool, onChangeActiveTool }: Temp
                     className="relative w-full group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
                   >
                     <Image fill src={template.thumbnailUrl || ''} alt={template.name} className="object-cover" />
-
+                      {template.isPro && (
+                       <div className='absolute top-2 right-2 size-8 items-center flex justify-center bg-black/50 rounded-full'>
+                       <Crown className='size-4 fill-yellow-500 text-yellow-500'/>
+                       </div>
+                      )}
                     <div className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left">
                       {template.name}
                     </div>
