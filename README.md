@@ -2,6 +2,10 @@
 
 # AI-Powered Graphic Design SaaS
 
+A sleek, modern SaaS graphic design app built with Next.js, TypeScript, and Tailwind CSS. Create and customize templates, manipulate text and shapes, and access powerful AI tools for background removal and image generation. Enjoy seamless authentication with Auth.js (Google, GitHub, email), real-time collaboration powered by Zustand and React Query, and secure subscription billing via Stripe. Boost productivity with intuitive keyboard shortcuts for fast editing and navigation. Backend powered by Hono and PostgreSQL (Neon DB) with smooth file uploads and scalable performance.
+
+
+
 ![A sleek, modern SaaS graphic design app built with Next.js, TypeScript, and Tailwind CSS.](https://8w23nzz55v.ufs.sh/f/HS9Td1jmryexk5cT0WKjRpGl1Eh5fmsngtLxe2cOwDrZqoFN)
 
 
